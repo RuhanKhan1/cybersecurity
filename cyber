@@ -4,7 +4,6 @@ class NetworkIntrusionDetector:
     def __init__(self, window_size=10, threshold_factor=2):
         self.window_size = window_size
         self.threshold_factor = threshold_factor
-        self.threshold = 0.5  
         self.window = []
 
     def detect_anomaly(self, packet):
@@ -13,14 +12,14 @@ class NetworkIntrusionDetector:
             self.window.pop(0)
 
         avg_packet_value = sum(self.window) / len(self.window)
-        std_dev = (sum((packet - avg_packet_value) ** 2 for packet in self.window) / len(self.window)) ** 0.5
+        std_dev = (sum((pkt - avg_packet_value) ** 2 for pkt in self.window) / len(self.window)) ** 0.5
         upper_threshold = avg_packet_value + self.threshold_factor * std_dev
 
         if packet > upper_threshold:
-            print(f"Anomaly detected: Packet value {packet} exceeds upper threshold {upper_threshold}")
+            print(f"Anomaly detected: Packet value {packet:.4f} exceeds upper threshold {upper_threshold:.4f}")
             self.threshold_factor *= 1.1  
         else:
-            print("No anomalies detected")
+            print(f"No anomalies detected: Packet value {packet:.4f}")
 
 network_traffic = [random.random() for _ in range(100)]
 
